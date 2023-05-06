@@ -45,5 +45,6 @@ func CreateUser(username, password, email, image string) User {
 
 func GetUserByEmail(email string) User {
 	var user = User{}
+	mysql.DB.First(&user, "email = ?", email)
 	return user
 }
