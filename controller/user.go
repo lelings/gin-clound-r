@@ -33,7 +33,7 @@ func Register(c *gin.Context) {
 	}
 
 	user := model.CreateUser(username, password, email, "")
-	token := middleware.SpawnToken(user.Id, user.UserName)
+	token := middleware.SpawnToken(user.Id, user.UserName, user.Email)
 	c.JSON(http.StatusOK, gin.H{
 		"code":  200,
 		"msg":   "创建成功",
@@ -69,7 +69,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token := middleware.SpawnToken(user.Id, user.UserName)
+	token := middleware.SpawnToken(user.Id, user.UserName, user.Email)
 	c.JSON(http.StatusOK, gin.H{
 		"code":  200,
 		"msg":   "登录成功",

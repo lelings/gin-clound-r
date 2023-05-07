@@ -54,13 +54,13 @@ func CreateFile(file, fileHash string, fileStoreId int, fid string, size int64) 
 
 func GetUserFile(folderId, storeId int) []MyFile {
 	var myFiles = []MyFile{}
-	mysql.DB.Find(&myFiles, "parent_folder_id = ? and store_id = ?", folderId, storeId)
+	mysql.DB.Find(&myFiles, "parent_folder_id = ? and file_store_id = ?", folderId, storeId)
 	return myFiles
 }
 
 func GetUserFileCount(storeId int) int {
 	var cnt int64
-	mysql.DB.Find(&MyFile{}, "where store_id = ?", storeId).Count(&cnt)
+	mysql.DB.Find(&MyFile{}, "file_store_id = ?", storeId).Count(&cnt)
 	return int(cnt)
 }
 
@@ -73,7 +73,7 @@ func SubSize(size int64, storeId int) {
 }
 
 func GetFileByType(fileType, storeId int) (files []MyFile) {
-	mysql.DB.Find(&files, "where fileType = ? and storeId = ?", fileType, storeId)
+	mysql.DB.Find(&files, "type = ? and file_store_id = ?", fileType, storeId)
 	return
 }
 
@@ -83,7 +83,7 @@ func IsFileExist(fileName string, fid int) bool {
 	fileSuffix := strings.ToLower(path.Ext(fileName))
 	filePrefix := fileName[:len(fileName)-len(fileSuffix)]
 
-	mysql.DB.First(&currentFile, "where parent_folder_id = ? and file_name = ? and postfix = ?", fid, filePrefix, fileSuffix)
+	mysql.DB.First(&currentFile, "parent_folder_id = ? and file_name = ? and postfix = ?", fid, filePrefix, fileSuffix)
 
 	if currentFile.Size > 0 {
 		return true
@@ -105,11 +105,11 @@ func GetDetailFile(storeId int) map[string]int64 {
 		otherFile int64
 	)
 
-	mysql.DB.Find(&files, "where file_store_id = ? and type = ?", storeId, 1).Count(&docFile)
-	mysql.DB.Find(&files, "where file_store_id = ? and type = ?", storeId, 2).Count(&imgFile)
-	mysql.DB.Find(&files, "where file_store_id = ? and type = ?", storeId, 3).Count(&videoFile)
-	mysql.DB.Find(&files, "where file_store_id = ? and type = ?", storeId, 4).Count(&musicFile)
-	mysql.DB.Find(&files, "where file_store_id = ? and type = ?", storeId, 5).Count(&otherFile)
+	mysql.DB.Find(&files, "file_store_id = ? and type = ?", storeId, 1).Count(&docFile)
+	mysql.DB.Find(&files, "file_store_id = ? and type = ?", storeId, 2).Count(&imgFile)
+	mysql.DB.Find(&files, "file_store_id = ? and type = ?", storeId, 3).Count(&videoFile)
+	mysql.DB.Find(&files, "file_store_id = ? and type = ?", storeId, 4).Count(&musicFile)
+	mysql.DB.Find(&files, "file_store_id = ? and type = ?", storeId, 5).Count(&otherFile)
 
 	fileDetail["docCount"] = docFile
 	fileDetail["imgCount"] = imgFile
@@ -128,5 +128,5 @@ func AddDownloadNum(id int) {
 }
 
 func DeleteFile(id, fid, storeId int) {
-	mysql.DB.Delete(&MyFile{}, "where id = ? and parent_file_id = ? and store_id = ?", id, fid, storeId)
+	mysql.DB.Delete(&MyFile{}, "id = ? and parent_file_id = ? and file_store_id = ?", id, fid, storeId)
 }

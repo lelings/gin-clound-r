@@ -15,13 +15,15 @@ var SECERT = []byte("rust-go")
 type Claims struct {
 	Id       int
 	Username string
+	Email    string
 	jwt.StandardClaims
 }
 
-func SpawnToken(id int, username string) string {
+func SpawnToken(id int, username string, email string) string {
 	claims := Claims{
 		Id:       id,
 		Username: username,
+		Email:    email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24 * 14).Unix(),
 			Issuer:    "lelings",
