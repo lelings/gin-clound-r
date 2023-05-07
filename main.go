@@ -10,7 +10,6 @@ func main() {
 	lib.InitConfig()
 	mysql.InitDB()
 	lib.InitRdb()
-
 	r := router.SetUprouter()
 	r.Run("localhost:8080")
 }

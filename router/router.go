@@ -2,6 +2,7 @@ package router
 
 import (
 	controller "example.com/m/v2/controller"
+	"example.com/m/v2/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,5 +15,13 @@ func SetUprouter() *gin.Engine {
 		user.POST("/register", controller.Register)
 		user.POST("/login", controller.Login)
 	}
+
+	file := router.Group("/file")
+	file.Use(middleware.Auth)
+	{
+		file.GET("/", controller.Files)
+		file.POST("/upload", controller.Upload)
+	}
+
 	return router
 }
